@@ -83,6 +83,10 @@ class HubMirror(object):
             # Set dst_repo to src_repo mapping or src_repo directly
             dst_repo: str = self.mappings.get(src_repo, src_repo)
             logger.info(f"Map {src_repo} to {dst_repo}")
+            if not config.force_update and hub.has_dst_repo(dst_repo):
+                logger.info(f"{dst_repo} already exists, skip mirroring.")
+                skip += 1
+                continue
             if self.test_black_white_list(src_repo):
                 logger.info(f"Backup {src_repo}")
                 try:
